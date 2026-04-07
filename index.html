@@ -1,19 +1,181 @@
-<section class="scrolly">
-  <div class="sticky-visual">
-    <img class="scene active" src="launch-setup.png" alt="Launch setup">
-    <img class="scene" src="deep-space-setup.png" alt="Deep space setup">
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scrollytelling Demo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-  <div class="steps">
-    <div class="step active" data-scene="0">
-      <div class="card">
-        The watercolor dot
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background: #ece8e1;
+      color: #222;
+    }
+
+    .scrolly {
+      position: relative;
+      width: 100%;
+    }
+
+    .sticky-visual {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #ece8e1;
+    }
+
+    .visual-frame {
+      position: relative;
+      width: min(92vw, 1100px);
+      height: min(78vh, 760px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scene {
+      position: absolute;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transform: scale(1.01);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+      pointer-events: none;
+    }
+
+    .scene.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .steps {
+      position: relative;
+      z-index: 2;
+    }
+
+    .step {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 6vw;
+      opacity: 0.35;
+      transition: opacity 0.35s ease;
+    }
+
+    .step.active {
+      opacity: 1;
+    }
+
+    .card {
+      max-width: 460px;
+      padding: 28px 32px;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(0, 0, 0, 0.14);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      line-height: 1.65;
+      font-size: 20px;
+    }
+
+    .dropcap {
+      float: left;
+      font-size: 64px;
+      line-height: 0.85;
+      padding-right: 10px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      .visual-frame {
+        width: 94vw;
+        height: 62vh;
+      }
+
+      .step {
+        justify-content: center;
+        align-items: flex-end;
+        padding: 0 18px 72px;
+      }
+
+      .card {
+        max-width: 100%;
+        font-size: 18px;
+        padding: 22px 24px;
+      }
+
+      .dropcap {
+        font-size: 52px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="scrolly">
+    <div class="sticky-visual">
+      <div class="visual-frame">
+        <img class="scene active" src="https://lh3.googleusercontent.com/d/13VJzrV0r3mo7ARggGnwq2gogY-IwJt2f" alt="Scene A" />
+        <img class="scene" src="https://lh3.googleusercontent.com/d/17c4busz7iz5kG4cTsRMDJT2JQdY_qDIR" alt="Scene B" />
+        <img class="scene" src="https://lh3.googleusercontent.com/d/1GO1huDYFQ7B4pufA-y80xz7QJMNishId" alt="Scene C" />
       </div>
     </div>
 
-    <div class="step" data-scene="1">
-      <div class="card">
-        Roses are red, violets are blue ...
+    <div class="steps">
+      <div class="step active" data-scene="0">
+        <div class="card">
+          <span class="dropcap">A</span>
+          A quiet beginning unfolds across the landscape, where the first image introduces the story with a calm and spacious rhythm. This opening moment sets the tone and invites the viewer to keep scrolling.
+        </div>
+      </div>
+
+      <div class="step" data-scene="1">
+        <div class="card">
+          <span class="dropcap">B</span>
+          Beneath the next transition, the second image takes over and shifts the atmosphere. Balance, contrast, and movement begin to build, giving the section a stronger narrative presence as the scroll continues.
+        </div>
+      </div>
+
+      <div class="step" data-scene="2">
+        <div class="card">
+          <span class="dropcap">C</span>
+          Carried into the final stage, the third image completes the sequence with a sense of arrival. The visual remains steady while the text glides past, creating that editorial storytelling effect you wanted.
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <script>
+    const steps = document.querySelectorAll('.step');
+    const scenes = document.querySelectorAll('.scene');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = Number(entry.target.dataset.scene);
+
+          steps.forEach((step) => step.classList.remove('active'));
+          scenes.forEach((scene) => scene.classList.remove('active'));
+
+          entry.target.classList.add('active');
+          if (scenes[index]) scenes[index].classList.add('active');
+        }
+      });
+    }, {
+      threshold: 0.55
+    });
+
+    steps.forEach((step) => observer.observe(step));
+  </script>
+</body>
+</html>
